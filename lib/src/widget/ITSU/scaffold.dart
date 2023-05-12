@@ -13,7 +13,8 @@ class ProZScaffold extends StatefulWidget {
     this.fab,
     this.bottomNavigationBar,
     this.endDrawer,
-    this.endDrawerKey
+    this.endDrawerKey,
+    this.endDrawerChanged = _defaultEndDrawerChanged
   }) : super(key: key);
 
   final PreferredSizeWidget appBar;
@@ -24,7 +25,8 @@ class ProZScaffold extends StatefulWidget {
   final Widget? bottomNavigationBar;
   final Widget? endDrawer;
   final Key? endDrawerKey;
-
+  final ValueChanged<bool> endDrawerChanged;
+  static void _defaultEndDrawerChanged(bool value) {}
   @override
   State<ProZScaffold> createState() => _ProZScaffoldState();
 }
@@ -49,6 +51,7 @@ class _ProZScaffoldState extends State<ProZScaffold> {
             backgroundColor: Colors.transparent,
             endDrawerEnableOpenDragGesture: false,
             endDrawer: widget.endDrawer,
+            onEndDrawerChanged: widget.endDrawerChanged,
             key: widget.endDrawerKey,
             appBar: widget.appBar,
             body: Container(
