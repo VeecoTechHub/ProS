@@ -1,14 +1,14 @@
 import 'entities_index.dart';
 
 class BaseResponse<T extends Serializable> {
-  bool? status;
+  bool? success;
   String? message;
   T? data;
   List<T>? datas;
 
   BaseResponse({
     this.message,
-    this.status,
+    this.success,
     this.data,
     this.datas,
   });
@@ -22,10 +22,10 @@ class BaseResponse<T extends Serializable> {
     //     : json.containsKey('success')
     //         ? json['success']
     //         : true;
-    final status = json['status'];
+    final success = json['success'];
     T? mItem;
     List<T>? mItemList;
-    if (status) {
+    if (success) {
       if (jsonData is List) {
         mItemList = item.listFromJson(jsonData);
       } else {
@@ -33,7 +33,7 @@ class BaseResponse<T extends Serializable> {
       }
     }
     return BaseResponse<T>(
-      status: json['status'],
+      success: json['success'],
       message: json.containsKey('message') ? json['message'] : '',
       data: mItem,
       datas: mItemList,
