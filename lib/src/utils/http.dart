@@ -203,7 +203,7 @@ class HttpUtil {
     String cacheKey = '',
     bool cacheDisk = false,
     bool isRaw = false,
-    bool isShowLoading = true,
+    bool isShowLoading = false,
     bool isShowResultDialog = false,
     String? message,
   }) async {
@@ -244,7 +244,7 @@ class HttpUtil {
     Map<String, dynamic>? queryParameters,
     Options? options,
     bool isRaw = false,
-    bool isShowLoading = true,
+    bool isShowLoading = false,
     bool isShowResultDialog = false,
     String? message,
   }) async {
@@ -278,7 +278,7 @@ class HttpUtil {
     Map<String, dynamic>? queryParameters,
     Options? options,
     bool isRaw = false,
-    bool isShowLoading = true,
+    bool isShowLoading = false,
     bool isShowResultDialog = false,
     String? message,
   }) async {
@@ -312,7 +312,7 @@ class HttpUtil {
     Map<String, dynamic>? queryParameters,
     Options? options,
     bool isRaw = false,
-    bool isShowLoading = true,
+    bool isShowLoading = false,
     bool isShowResultDialog = false,
     String? message,
   }) async {
@@ -346,7 +346,7 @@ class HttpUtil {
     Map<String, dynamic>? queryParameters,
     Options? options,
     bool isRaw = false,
-    bool isShowLoading = true,
+    bool isShowLoading = false,
     bool isShowResultDialog = false,
     String? message,
   }) async {
@@ -380,7 +380,7 @@ class HttpUtil {
     Map<String, dynamic>? queryParameters,
     Options? options,
     bool isRaw = false,
-    bool isShowLoading = true,
+    bool isShowLoading = false,
     bool isShowResultDialog = false,
     String? message,
   }) async {
@@ -415,7 +415,7 @@ class HttpUtil {
     Map<String, dynamic>? queryParameters,
     Options? options,
     bool isRaw = false,
-    bool isShowLoading = true,
+    bool isShowLoading = false,
     bool isShowResultDialog = false,
     String? message,
   }) async {
