@@ -32,11 +32,18 @@ class _ProZMultiMediaState extends State<ProZMultiMedia> {
     }
     if (widget.source.runtimeType == String) {
       final String data = widget.source;
-      if (data.isURL && data.mediaType() == MediaType.image) {
-        return Image.network(
-          data,
-          fit: BoxFit.fitHeight,
-        );
+      if (data.mediaType() == MediaType.image) {
+        if (data.isURL) {
+          return Image.network(
+            data,
+            fit: BoxFit.fitHeight,
+          );
+        } else {
+          return Image.asset(
+            data,
+            fit: BoxFit.fitHeight,
+          );
+        }
       }
       if (data.isURL && data.mediaType() == MediaType.video) {
         return VideoWidget(source: data);
