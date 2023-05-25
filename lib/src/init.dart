@@ -6,8 +6,7 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 class ProZ {
   static Future init() async {
     Get.put<HttpSetting>(HttpSetting());
-    StreamingSharedPreferences sharedPreferences =
-        await StreamingSharedPreferences.instance;
-    Get.put<StorageService>(StorageService(sharedPreferences));
+    final preference = await StreamingSharedPreferences.instance;
+    await Get.putAsync<StorageService>(() => StorageService(preference).init());
   }
 }
