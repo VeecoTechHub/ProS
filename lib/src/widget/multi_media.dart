@@ -8,8 +8,19 @@ import 'package:video_player/video_player.dart';
 import '../global_enum/enum_index.dart';
 
 class ProZMultiMedia extends StatefulWidget {
-  const ProZMultiMedia({Key? key, required this.source}) : super(key: key);
+  const ProZMultiMedia({
+    Key? key,
+    required this.source,
+    this.fit = BoxFit.fitHeight,
+    this.padding,
+    this.margin,
+    this.height,
+    this.width,
+  }) : super(key: key);
   final dynamic source;
+  final BoxFit fit;
+  final EdgeInsetsGeometry? padding, margin;
+  final double? height, width;
 
   @override
   State<ProZMultiMedia> createState() => _ProZMultiMediaState();
@@ -18,12 +29,22 @@ class ProZMultiMedia extends StatefulWidget {
 class _ProZMultiMediaState extends State<ProZMultiMedia> {
   @override
   Widget build(BuildContext context) {
+    return Container(
+      padding: widget.padding,
+      margin: widget.margin,
+      height: widget.height,
+      width: widget.width,
+      child: content(),
+    );
+  }
+
+  Widget content() {
     if (widget.source.runtimeType.toString() == '_File') {
       final File data = widget.source;
       if (data.mediaType() == MediaType.image) {
         return Image.file(
           data,
-          fit: BoxFit.fitHeight,
+          fit: widget.fit,
         );
       }
       if (data.mediaType() == MediaType.video) {
@@ -36,12 +57,12 @@ class _ProZMultiMediaState extends State<ProZMultiMedia> {
         if (data.isURL) {
           return Image.network(
             data,
-            fit: BoxFit.fitHeight,
+            fit: widget.fit,
           );
         } else {
           return Image.asset(
             data,
-            fit: BoxFit.fitHeight,
+            fit: widget.fit,
           );
         }
       }
@@ -98,7 +119,9 @@ class _VideoWidgetState extends State<VideoWidget> {
         IconButton(
           onPressed: () {
             setState(() {
-              _controller.value.isPlaying ? _controller.pause() : _controller.play();
+              _controller.value.isPlaying
+                  ? _controller.pause()
+                  : _controller.play();
             });
           },
           icon: Icon(
