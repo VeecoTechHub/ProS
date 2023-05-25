@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProZTextFormField extends StatefulWidget {
   final TextEditingController? controller;
-  final FocusNode? focusNode;
+  // final FocusNode? focusNode;
   final InputDecoration? decoration;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
@@ -63,7 +63,7 @@ class ProZTextFormField extends StatefulWidget {
   const ProZTextFormField({
     key,
     this.controller,
-    this.focusNode,
+    // this.focusNode,
     this.decoration,
     this.keyboardType,
     this.textInputAction,
@@ -140,7 +140,7 @@ class _CustomTextFieldState extends State<ProZTextFormField> with SingleTickerPr
     super.initState();
     handleHideCancelIcon();
     controller.addListener(handleHideCancelIcon);
-    (widget.focusNode!).addListener(handleHideOuterLabel);
+    // (widget.focusNode!).addListener(handleHideOuterLabel);
     _defaultInputDecoration = InputDecoration(hintText: widget.hintText ?? 'Enter something...').copyWith(
       suffixIcon: buildSuffixIconDecoration(),
     );
@@ -189,7 +189,7 @@ class _CustomTextFieldState extends State<ProZTextFormField> with SingleTickerPr
   @override
   void dispose() {
     if (widget.controller == null) controller.dispose();
-    if (widget.focusNode!.hasFocus) widget.focusNode!.dispose();
+    // if (widget.focusNode!.hasFocus) widget.focusNode!.dispose();
     super.dispose();
   }
 
@@ -224,7 +224,7 @@ class _CustomTextFieldState extends State<ProZTextFormField> with SingleTickerPr
             : Container(),
         TextFormField(
           controller: controller,
-          focusNode: widget.focusNode,
+          // focusNode: widget.focusNode,
           decoration: (widget.decoration ?? _defaultInputDecoration).copyWith(
             suffixIcon: buildSuffixIconDecoration(),
           ),
