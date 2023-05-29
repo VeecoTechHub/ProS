@@ -119,9 +119,7 @@ class _VideoWidgetState extends State<VideoWidget> {
         IconButton(
           onPressed: () {
             setState(() {
-              _controller.value.isPlaying
-                  ? _controller.pause()
-                  : _controller.play();
+              _controller.value.isPlaying ? _controller.pause() : _controller.play();
             });
           },
           icon: Icon(

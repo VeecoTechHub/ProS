@@ -2,7 +2,6 @@ import 'dart:io';
 
 import '../global_enum/enum_index.dart';
 
-
 extension FileExtension on File {
   MediaType mediaType() {
     final extension = path.toLowerCase();

@@ -33,132 +33,132 @@ PreferredSizeWidget ProZAppBar<T>({
   // );
   // large app bar
   PreferredSizeWidget large() => PreferredSize(
-    preferredSize: Size.fromHeight(0.26.sh),
-    child: Container(
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          trailingIcon != null
-              ? Row(
-            children: [
-              const Spacer(),
-              ...trailingIcon,
-              SizedBox(width: 20.w),
-            ],
-          )
-              : Container(),
-          title.isNotEmpty
-              ? Text(
-            title,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 38.sp,
-            ),
-          )
-              : Container(),
-          title.isNotEmpty
-              ? Text(
-            subtitle,
-            style: TextStyle(
-              color: Colors.grey,
-              fontWeight: FontWeight.normal,
-              fontSize: 13.sp,
-            ),
-          )
-              : Container(),
-          child ?? Container(),
-        ],
-      ),
-    ),
-  );
-  // medium app bar
-  PreferredSizeWidget medium() => AppBar(
-    toolbarHeight: 0.16.sh,
-    centerTitle: true,
-    backgroundColor: Colors.transparent,
-    iconTheme: const IconThemeData(color: Colors.white),
-    flexibleSpace: SafeArea(
-      child: Stack(
-        alignment: Alignment.topRight,
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
+        preferredSize: Size.fromHeight(0.26.sh),
+        child: Container(
+          alignment: Alignment.center,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              trailingIcon != null
+                  ? Row(
+                      children: [
+                        const Spacer(),
+                        ...trailingIcon,
+                        SizedBox(width: 20.w),
+                      ],
+                    )
+                  : Container(),
               title.isNotEmpty
                   ? Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 38.sp,
-                ),
-                overflow: TextOverflow.ellipsis,
-              )
+                      title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 38.sp,
+                      ),
+                    )
+                  : Container(),
+              title.isNotEmpty
+                  ? Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 13.sp,
+                      ),
+                    )
                   : Container(),
               child ?? Container(),
             ],
           ),
-          if (trailingIcon != null)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [...trailingIcon],
-            ),
-        ],
-      ),
-    ),
-  );
-  PreferredSizeWidget small() => PreferredSize(
-    preferredSize: Size.fromHeight(0.08.sh),
-    child: AppBar(
-      automaticallyImplyLeading: false,
-      leading: showBackButton
-          ? IconButton(
-        onPressed: () => Get.back<T>(result: result),
-        icon: Icon(
-          Icons.arrow_back_ios_new,
-          color: Colors.white,
-          size: 30.sp,
         ),
-      )
-          : null,
-      backgroundColor: Colors.transparent,
-      title: title.isNotEmpty
-          ? Text(
-        title,
-        style: appbarTextStyle,
-      )
-          : child,
-      centerTitle: titleCenter,
-      actions: trailingIcon,
-    ),
-  );
+      );
+  // medium app bar
+  PreferredSizeWidget medium() => AppBar(
+        toolbarHeight: 0.16.sh,
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.white),
+        flexibleSpace: SafeArea(
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  title.isNotEmpty
+                      ? Text(
+                          title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 38.sp,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : Container(),
+                  child ?? Container(),
+                ],
+              ),
+              if (trailingIcon != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [...trailingIcon],
+                ),
+            ],
+          ),
+        ),
+      );
+  PreferredSizeWidget small() => PreferredSize(
+        preferredSize: Size.fromHeight(0.08.sh),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          leading: showBackButton
+              ? IconButton(
+                  onPressed: () => Get.back<T>(result: result),
+                  icon: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.white,
+                    size: 30.sp,
+                  ),
+                )
+              : null,
+          backgroundColor: Colors.transparent,
+          title: title.isNotEmpty
+              ? Text(
+                  title,
+                  style: appbarTextStyle,
+                )
+              : child,
+          centerTitle: titleCenter,
+          actions: trailingIcon,
+        ),
+      );
   // normal app bar
   PreferredSizeWidget normal() => AppBar(
-    automaticallyImplyLeading: false,
-    leading: showBackButton
-        ? IconButton(
-      onPressed: () => Get.back<T>(result: result),
-      icon: Icon(
-        Icons.arrow_back_ios_new,
-        color: Colors.white,
-        size: 25.sp,
-      ),
-    )
-        : null,
-    backgroundColor: Colors.black,
-    iconTheme: const IconThemeData(color: Colors.white),
-    title: Text(
-      title,
-      textAlign: TextAlign.center,
-      style: appbarTextStyle,
-    ),
-    actions: trailingIcon,
-  );
+        automaticallyImplyLeading: false,
+        leading: showBackButton
+            ? IconButton(
+                onPressed: () => Get.back<T>(result: result),
+                icon: Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                  size: 25.sp,
+                ),
+              )
+            : null,
+        backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: appbarTextStyle,
+        ),
+        actions: trailingIcon,
+      );
   // differentiate type
   switch (type) {
     case ProZAppBarType.large:

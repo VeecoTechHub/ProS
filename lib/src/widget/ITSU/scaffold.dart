@@ -4,17 +4,7 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProZScaffold extends StatefulWidget {
-  const ProZScaffold({
-    Key? key,
-    required this.appBar,
-    required this.body,
-    this.isCurve = false,
-    this.backgroundColor = Colors.white,
-    this.fab,
-    this.bottomNavigationBar,
-    this.endDrawer,
-    this.endDrawerKey
-  }) : super(key: key);
+  const ProZScaffold({Key? key, required this.appBar, required this.body, this.isCurve = false, this.backgroundColor = Colors.white, this.fab, this.bottomNavigationBar, this.endDrawer, this.endDrawerKey}) : super(key: key);
 
   final PreferredSizeWidget appBar;
   final Widget body;

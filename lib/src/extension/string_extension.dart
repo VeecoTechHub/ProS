@@ -16,6 +16,21 @@ extension StringExtension on String? {
   //       return CUSTOMER_BASE_URL;
   //   }
   // }
+  String toDOB({String format = 'yyyy-MM-dd'}) {
+    if (this == null) {
+      return '';
+    }
+    String year = this!.substring(0, 2);
+    String month = this!.substring(2, 4);
+    String day = this!.substring(4, 6);
+    String now = DateTime.now().toString();
+    String decade = now.substring(0, 2);
+    year = int.parse(now.substring(2, 4)) > int.parse(year) ? decade + year : "19$year";
+    DateTime dob = DateTime(int.parse(year), int.parse(month), int.parse(day));
+    return DateFormat(format).format(dob);
+  }
+
+  String get toGender => int.parse(this!.substring(this!.length - 1)) % 2 == 0 ? 'Female' : 'Male';
 
   String toBase64() => this != null ? utf8.fuse(base64).encode(this!) : '';
 

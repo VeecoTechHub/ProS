@@ -41,7 +41,7 @@ class _RatingWidgetState extends State<RatingWidget> {
 
   @override
   Widget build(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: List.generate(5, (index) => _buildStar(index + 1)),
-  );
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(5, (index) => _buildStar(index + 1)),
+      );
 }

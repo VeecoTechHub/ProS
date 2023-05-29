@@ -10,11 +10,13 @@ class HttpSetting extends GetxController {
   final RxString _baseUrl = ''.obs;
   set baseUrl(value) => _baseUrl.value = value;
   String get baseUrl => _baseUrl.value;
+
   /// 保存 token
   Future<void> setToken(String value) async {
     await StorageService.to.setString('STORAGE_USER_TOKEN_KEY', value);
     token = value;
   }
+
   Future<void> setBaseUrl(String value) async {
     _baseUrl.value = value;
     _baseUrl.refresh();

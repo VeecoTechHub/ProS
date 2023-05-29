@@ -110,10 +110,10 @@ class ProZTextFormField extends StatefulWidget {
     this.showLabelTextOuter = false,
     this.hintText,
   })  : assert(
-  !(showEyeIcon == showCancelIcon) || (!showEyeIcon || !showCancelIcon),
-  'only one of them',
-  ),
-  // assert(decoration != null, 'Decoration cannot be null'),
+          !(showEyeIcon == showCancelIcon) || (!showEyeIcon || !showCancelIcon),
+          'only one of them',
+        ),
+        // assert(decoration != null, 'Decoration cannot be null'),
         super(key: key);
 
   @override
@@ -201,26 +201,26 @@ class _CustomTextFieldState extends State<ProZTextFormField> with SingleTickerPr
       children: [
         widget.showLabelTextOuter
             ? Padding(
-          padding: EdgeInsets.only(left: 5.w),
-          child: Visibility(
-            visible: isShowOuterLabel || controller.text.isNotEmpty,
-            maintainSize: true,
-            maintainAnimation: true,
-            maintainState: true,
-            child: AnimatedOpacity(
-              duration: const Duration(seconds: 1),
-              curve: Curves.fastOutSlowIn,
-              opacity: isShowOuterLabel || controller.text.isNotEmpty ? 1 : 0,
-              child: Padding(
-                padding: EdgeInsets.only(left: 15.w),
-                child: Text(
-                  widget.decoration?.hintText ?? '',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                padding: EdgeInsets.only(left: 5.w),
+                child: Visibility(
+                  visible: isShowOuterLabel || controller.text.isNotEmpty,
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  child: AnimatedOpacity(
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.fastOutSlowIn,
+                    opacity: isShowOuterLabel || controller.text.isNotEmpty ? 1 : 0,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 15.w),
+                      child: Text(
+                        widget.decoration?.hintText ?? '',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        )
+              )
             : Container(),
         TextFormField(
           controller: controller,
@@ -251,11 +251,11 @@ class _CustomTextFieldState extends State<ProZTextFormField> with SingleTickerPr
           onFieldSubmitted: widget.nextNode == null
               ? widget.onFieldSubmitted
               : (value) {
-            FocusScope.of(context).requestFocus(widget.nextNode);
-            if (widget.onFieldSubmitted != null) {
-              widget.onFieldSubmitted!(value);
-            }
-          },
+                  FocusScope.of(context).requestFocus(widget.nextNode);
+                  if (widget.onFieldSubmitted != null) {
+                    widget.onFieldSubmitted!(value);
+                  }
+                },
           inputFormatters: widget.inputFormatters,
           autofillHints: widget.autofillHints,
           enabled: widget.enabled,
