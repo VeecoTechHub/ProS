@@ -7,10 +7,12 @@ class ProZTabBarView extends StatefulWidget {
     required this.pages,
     this.onTap,
     this.onPageChanged,
+    this.isScrollable = false,
   }) : super(key: key);
   final List<String> labels;
   final List<Widget> pages;
   final Function(int)? onTap, onPageChanged;
+  final bool isScrollable;
 
   @override
   State<ProZTabBarView> createState() => _ProZTabBarViewState();
@@ -45,6 +47,7 @@ class _ProZTabBarViewState extends State<ProZTabBarView> with SingleTickerProvid
       mainAxisSize: MainAxisSize.min,
       children: [
         TabBar(
+          isScrollable: widget.isScrollable,
           controller: _tabController,
           tabs: myTabs,
           onTap: widget.onTap,
