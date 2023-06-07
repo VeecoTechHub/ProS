@@ -12,6 +12,7 @@ class FirebaseMassagingHandler {
   static init(
     void Function(NotificationResponse notificationResponse) notificationTapBackground, {
     Function(model.Notification)? onReceivedResult,
+    required Function(String?) getToken,
   }) async {
     // request permission
     FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -41,6 +42,7 @@ class FirebaseMassagingHandler {
     // Get the FCM token
     await FirebaseMessaging.instance.getToken().then((token) async {
       log(name: "FCM: ", "$token");
+      getToken(token);
       final name = Platform.isAndroid ? 'Android' : 'iOS';
       await FirebaseFirestore.instance.collection("UserTokens").doc(name).set({'token': token});
     });
