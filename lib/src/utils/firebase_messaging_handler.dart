@@ -5,12 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import '../entities/notification.dart' as model;
 
 class FirebaseMassagingHandler {
   static init(
-    void Function(NotificationResponse notificationResponse) notificationTapBackground, {
+    VoidCallback onMessageOpenedAppCallback,
+    void Function(NotificationResponse notificationResponse)
+        notificationTapBackground, {
     Function(model.Notification)? onReceivedResult,
     required Function(String?) getToken,
   }) async {
@@ -44,16 +46,21 @@ class FirebaseMassagingHandler {
       log(name: "FCM: ", "$token");
       getToken(token);
       final name = Platform.isAndroid ? 'Android' : 'iOS';
-      await FirebaseFirestore.instance.collection("UserTokens").doc(name).set({'token': token});
+      await FirebaseFirestore.instance
+          .collection("UserTokens")
+          .doc(name)
+          .set({'token': token});
     });
     // Customize Notification
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
         iOS: DarwinInitializationSettings(),
       ),
       onDidReceiveNotificationResponse: (payload) {
+        onMessageOpenedAppCallback();
         print(payload);
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
@@ -90,10 +97,18 @@ class FirebaseMassagingHandler {
             playSound: true,
             // sound: const RawResourceAndroidNotificationSound('notification_sound'),
           ),
-          iOS: const DarwinNotificationDetails(/*sound: 'notification_sound.aiff'*/),
+          iOS: const DarwinNotificationDetails(
+              /*sound: 'notification_sound.aiff'*/),
         ),
         payload: message.data['body'],
       );
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      if(notification != null){
+      onMessageOpenedAppCallback();
+      }
+      
     });
   }
 }
