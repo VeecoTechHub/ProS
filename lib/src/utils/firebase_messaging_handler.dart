@@ -104,9 +104,16 @@ class FirebaseMassagingHandler {
       );
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      if(notification != null){
-      onMessageOpenedAppCallback();
+      if (onReceivedResult != null) {
+        onMessageOpenedAppCallback();
+        onReceivedResult(
+          model.Notification(
+            title: message.notification?.title,
+            message: message.notification?.body,
+            receivedTime: DateTime.now(),
+            isRead: false,
+          ),
+        );
       }
       
     });
