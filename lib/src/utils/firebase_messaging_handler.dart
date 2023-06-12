@@ -10,12 +10,13 @@ import '../entities/notification.dart' as model;
 
 class FirebaseMassagingHandler {
   static init(
-    VoidCallback onMessageOpenedAppCallback,
-    void Function(NotificationResponse notificationResponse)
-        notificationTapBackground, {
-    Function(model.Notification)? onReceivedResult,
-    required Function(String?) getToken,
-  }) async {
+      Future<void> Function(RemoteMessage) firebaseBackgroundMessageHandle,
+      VoidCallback onMessageOpenedAppCallback,
+      void Function(NotificationResponse notificationResponse)
+      notificationTapBackground, {
+        Function(model.Notification)? onReceivedResult,
+        required Function(String?) getToken,
+      }) async {
     // request permission
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     NotificationSettings settings = await messaging.requestPermission(
@@ -53,7 +54,7 @@ class FirebaseMassagingHandler {
     });
     // Customize Notification
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
@@ -98,11 +99,15 @@ class FirebaseMassagingHandler {
             // sound: const RawResourceAndroidNotificationSound('notification_sound'),
           ),
           iOS: const DarwinNotificationDetails(
-              /*sound: 'notification_sound.aiff'*/),
+            /*sound: 'notification_sound.aiff'*/),
         ),
         payload: message.data['body'],
       );
     });
+
+
+    FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessageHandle);
+
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (onReceivedResult != null) {
         onMessageOpenedAppCallback();
@@ -115,7 +120,6 @@ class FirebaseMassagingHandler {
           ),
         );
       }
-      
     });
   }
 }
