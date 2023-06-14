@@ -1,14 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../entities/notification.dart' as model;
 
-class FirebaseMassagingHandler {
+class FirebaseMessagingHandler {
   static init(
       Future<void> Function(RemoteMessage) firebaseBackgroundMessageHandle,
       VoidCallback onMessageOpenedAppCallback,
@@ -66,6 +64,8 @@ class FirebaseMassagingHandler {
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
+
+    //handle incoming message
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       log(name: "title: ", "${message.notification?.title}");
       log(name: "body: ", "${message.notification?.body}");
@@ -79,16 +79,25 @@ class FirebaseMassagingHandler {
           ),
         );
       }
+      final String imageUrl = message.notification?.android?.imageUrl ?? '';
       await flutterLocalNotificationsPlugin.show(
         0,
         message.notification?.title,
         message.notification?.body,
         NotificationDetails(
           android: AndroidNotificationDetails(
-            'veecotech',
-            'veecotech',
+            message.notification?.android?.channelId ?? 'veecotech',
+            message.notification?.android?.channelId ?? 'veecotech',
             importance: Importance.high,
-            styleInformation: BigTextStyleInformation(
+            styleInformation: imageUrl.isNotEmpty ? BigPictureStyleInformation(
+              hideExpandedLargeIcon: true,
+              FilePathAndroidBitmap(imageUrl),
+              contentTitle: message.notification!.title.toString(),
+              summaryText: message.notification!.body.toString(),
+              htmlFormatContentTitle: true,
+              htmlFormatSummaryText: true,
+            ):
+            BigTextStyleInformation(
               message.notification!.body.toString(),
               htmlFormatBigText: true,
               contentTitle: message.notification!.title.toString(),
@@ -105,22 +114,10 @@ class FirebaseMassagingHandler {
       );
     });
 
-
+    //message handler when app is in background/terminated state
     FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessageHandle);
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (onReceivedResult != null) {
-        onMessageOpenedAppCallback();
-        onReceivedResult(
-          model.Notification(
-            title: message.notification?.title,
-            message: message.notification?.body,
-            receivedTime: DateTime.now(),
-            isRead: false,
-          ),
-        );
-      }
-    });
+
   }
 }
 // class FirebaseMassagingHandler {
