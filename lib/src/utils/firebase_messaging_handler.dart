@@ -1,19 +1,20 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import '../entities/notification.dart' as model;
 
-class FirebaseMassagingHandler {
+class FirebaseMessagingHandler {
   static init(
-    void Function(NotificationResponse notificationResponse) notificationTapBackground, {
-    Function(model.Notification)? onReceivedResult,
-    required Function(String?) getToken,
-  }) async {
+      Future<void> Function(RemoteMessage) firebaseBackgroundMessageHandle,
+      VoidCallback onMessageOpenedAppCallback,
+      void Function(NotificationResponse notificationResponse)
+      notificationTapBackground, {
+        Function(model.Notification)? onReceivedResult,
+        required Function(String?) getToken,
+      }) async {
     // request permission
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     NotificationSettings settings = await messaging.requestPermission(
@@ -44,20 +45,27 @@ class FirebaseMassagingHandler {
       log(name: "FCM: ", "$token");
       getToken(token);
       final name = Platform.isAndroid ? 'Android' : 'iOS';
-      await FirebaseFirestore.instance.collection("UserTokens").doc(name).set({'token': token});
+      await FirebaseFirestore.instance
+          .collection("UserTokens")
+          .doc(name)
+          .set({'token': token});
     });
     // Customize Notification
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
         iOS: DarwinInitializationSettings(),
       ),
       onDidReceiveNotificationResponse: (payload) {
+        onMessageOpenedAppCallback();
         print(payload);
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
+
+    //handle incoming message
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       log(name: "title: ", "${message.notification?.title}");
       log(name: "body: ", "${message.notification?.body}");
@@ -71,16 +79,25 @@ class FirebaseMassagingHandler {
           ),
         );
       }
+      final String imageUrl = message.notification?.android?.imageUrl ?? '';
       await flutterLocalNotificationsPlugin.show(
         0,
         message.notification?.title,
         message.notification?.body,
         NotificationDetails(
           android: AndroidNotificationDetails(
-            'veecotech',
-            'veecotech',
+            message.notification?.android?.channelId ?? 'veecotech',
+            message.notification?.android?.channelId ?? 'veecotech',
             importance: Importance.high,
-            styleInformation: BigTextStyleInformation(
+            styleInformation: imageUrl.isNotEmpty ? BigPictureStyleInformation(
+              hideExpandedLargeIcon: true,
+              FilePathAndroidBitmap(imageUrl),
+              contentTitle: message.notification!.title.toString(),
+              summaryText: message.notification!.body.toString(),
+              htmlFormatContentTitle: true,
+              htmlFormatSummaryText: true,
+            ):
+            BigTextStyleInformation(
               message.notification!.body.toString(),
               htmlFormatBigText: true,
               contentTitle: message.notification!.title.toString(),
@@ -90,11 +107,17 @@ class FirebaseMassagingHandler {
             playSound: true,
             // sound: const RawResourceAndroidNotificationSound('notification_sound'),
           ),
-          iOS: const DarwinNotificationDetails(/*sound: 'notification_sound.aiff'*/),
+          iOS: const DarwinNotificationDetails(
+            /*sound: 'notification_sound.aiff'*/),
         ),
         payload: message.data['body'],
       );
     });
+
+    //message handler when app is in background/terminated state
+    FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessageHandle);
+
+
   }
 }
 // class FirebaseMassagingHandler {
