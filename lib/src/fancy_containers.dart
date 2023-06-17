@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'utils/fancy_containers_typedef.dart';
-
 class FancyContainer extends StatefulWidget {
   const FancyContainer({
     Key? key,
@@ -27,7 +25,7 @@ class FancyContainer extends StatefulWidget {
   final Color? textColor;
   final String? subtitle;
   final Color? subtitleColor;
-  final FancyContainersCallback? onTap;
+  final Function()? onTap;
   final EdgeInsetsGeometry? padding;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
@@ -76,16 +74,16 @@ class _FancyContainerState extends State<FancyContainer> {
             ),
             widget.subtitle != null
                 ? Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Text(
-                widget.subtitle ?? "",
-                style: widget.subtitleStyle ??
-                    TextStyle(
-                      color: widget.subtitleColor,
-                      fontSize: 15.0,
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      widget.subtitle ?? "",
+                      style: widget.subtitleStyle ??
+                          TextStyle(
+                            color: widget.subtitleColor,
+                            fontSize: 15.0,
+                          ),
                     ),
-              ),
-            )
+                  )
                 : Container(),
           ],
         ),
