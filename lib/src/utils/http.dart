@@ -103,7 +103,7 @@ class HttpUtil {
     debugPrint("error.code -> ${eInfo.code}, error.message -> ${eInfo.message}");
     switch (eInfo.code) {
       case 401:
-        // UserStore.to.onLogout();
+      // UserStore.to.onLogout();
         EasyLoading.showError(eInfo.message);
         break;
       default:
@@ -163,7 +163,7 @@ class HttpUtil {
         }
       default:
         {
-          return ErrorEntity(code: -1, message: error.message??'');
+          return ErrorEntity(code: -1, message: error.message ?? '');
         }
     }
   }
@@ -194,19 +194,19 @@ class HttpUtil {
   /// cacheKey 缓存key
   /// cacheDisk 是否磁盘缓存
   Future get(
-    String path, {
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    bool refresh = false,
-    bool noCache = true,
-    bool list = false,
-    String cacheKey = '',
-    bool cacheDisk = false,
-    bool isRaw = false,
-    bool isShowLoading = true,
-    bool isShowResultDialog = false,
-    String? message,
-  }) async {
+      String path, {
+        Map<String, dynamic>? queryParameters,
+        Options? options,
+        bool refresh = false,
+        bool noCache = true,
+        bool list = false,
+        String cacheKey = '',
+        bool cacheDisk = false,
+        bool isRaw = false,
+        bool isShowLoading = false,
+        bool isShowResultDialog = false,
+        String? message,
+      }) async {
     dio.options.baseUrl = isRaw ? path : HttpSetting.to.baseUrl;
     Options requestOptions = options ?? Options();
     requestOptions.extra ??= {};
@@ -226,7 +226,7 @@ class HttpUtil {
     var response = await dio.get(
       path,
       queryParameters: queryParameters,
-      options: options,
+      options: options ?? requestOptions,
       cancelToken: cancelToken,
     );
     if (isShowLoading) Loading.dismiss();
@@ -239,15 +239,15 @@ class HttpUtil {
 
   /// restful post 操作
   Future post(
-    String path, {
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    bool isRaw = false,
-    bool isShowLoading = true,
-    bool isShowResultDialog = false,
-    String? message,
-  }) async {
+      String path, {
+        dynamic data,
+        Map<String, dynamic>? queryParameters,
+        Options? options,
+        bool isRaw = false,
+        bool isShowLoading = false,
+        bool isShowResultDialog = false,
+        String? message,
+      }) async {
     dio.options.baseUrl = isRaw ? path : HttpSetting.to.baseUrl;
     Options requestOptions = options ?? Options();
     requestOptions.headers = requestOptions.headers ?? {};
@@ -260,7 +260,7 @@ class HttpUtil {
       path,
       data: data,
       queryParameters: queryParameters,
-      options: requestOptions,
+      options: options ?? requestOptions,
       cancelToken: cancelToken,
     );
     if (isShowLoading) Loading.dismiss();
@@ -273,15 +273,15 @@ class HttpUtil {
 
   /// restful put 操作
   Future put(
-    String path, {
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    bool isRaw = false,
-    bool isShowLoading = true,
-    bool isShowResultDialog = false,
-    String? message,
-  }) async {
+      String path, {
+        dynamic data,
+        Map<String, dynamic>? queryParameters,
+        Options? options,
+        bool isRaw = false,
+        bool isShowLoading = false,
+        bool isShowResultDialog = false,
+        String? message,
+      }) async {
     dio.options.baseUrl = isRaw ? path : HttpSetting.to.baseUrl;
     Options requestOptions = options ?? Options();
     requestOptions.headers = requestOptions.headers ?? {};
@@ -294,7 +294,7 @@ class HttpUtil {
       path,
       data: data,
       queryParameters: queryParameters,
-      options: requestOptions,
+      options: options ?? requestOptions,
       cancelToken: cancelToken,
     );
     if (isShowLoading) Loading.dismiss();
@@ -307,15 +307,15 @@ class HttpUtil {
 
   /// restful patch 操作
   Future patch(
-    String path, {
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    bool isRaw = false,
-    bool isShowLoading = true,
-    bool isShowResultDialog = false,
-    String? message,
-  }) async {
+      String path, {
+        dynamic data,
+        Map<String, dynamic>? queryParameters,
+        Options? options,
+        bool isRaw = false,
+        bool isShowLoading = false,
+        bool isShowResultDialog = false,
+        String? message,
+      }) async {
     dio.options.baseUrl = isRaw ? path : HttpSetting.to.baseUrl;
     Options requestOptions = options ?? Options();
     requestOptions.headers = requestOptions.headers ?? {};
@@ -328,7 +328,7 @@ class HttpUtil {
       path,
       data: data,
       queryParameters: queryParameters,
-      options: requestOptions,
+      options: options ?? requestOptions,
       cancelToken: cancelToken,
     );
     if (isShowLoading) Loading.dismiss();
@@ -341,15 +341,15 @@ class HttpUtil {
 
   /// restful delete 操作
   Future delete(
-    String path, {
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    bool isRaw = false,
-    bool isShowLoading = true,
-    bool isShowResultDialog = false,
-    String? message,
-  }) async {
+      String path, {
+        dynamic data,
+        Map<String, dynamic>? queryParameters,
+        Options? options,
+        bool isRaw = false,
+        bool isShowLoading = false,
+        bool isShowResultDialog = false,
+        String? message,
+      }) async {
     dio.options.baseUrl = isRaw ? path : HttpSetting.to.baseUrl;
     Options requestOptions = options ?? Options();
     requestOptions.headers = requestOptions.headers ?? {};
@@ -362,7 +362,7 @@ class HttpUtil {
       path,
       data: data,
       queryParameters: queryParameters,
-      options: requestOptions,
+      options: options ?? requestOptions,
       cancelToken: cancelToken,
     );
     if (isShowLoading) Loading.dismiss();
@@ -375,15 +375,15 @@ class HttpUtil {
 
   /// restful post form 表单提交操作
   Future postForm(
-    String path, {
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    bool isRaw = false,
-    bool isShowLoading = true,
-    bool isShowResultDialog = false,
-    String? message,
-  }) async {
+      String path, {
+        dynamic data,
+        Map<String, dynamic>? queryParameters,
+        Options? options,
+        bool isRaw = false,
+        bool isShowLoading = false,
+        bool isShowResultDialog = false,
+        String? message,
+      }) async {
     dio.options.baseUrl = isRaw ? path : HttpSetting.to.baseUrl;
     Options requestOptions = options ?? Options();
     requestOptions.headers = requestOptions.headers ?? {};
@@ -396,7 +396,7 @@ class HttpUtil {
       path,
       data: FormData.fromMap(data),
       queryParameters: queryParameters,
-      options: requestOptions,
+      options: options ?? requestOptions,
       cancelToken: cancelToken,
     );
     if (isShowLoading) Loading.dismiss();
@@ -409,16 +409,16 @@ class HttpUtil {
 
   /// restful post Stream 流数据
   Future postStream(
-    String path, {
-    dynamic data,
-    int dataLength = 0,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    bool isRaw = false,
-    bool isShowLoading = true,
-    bool isShowResultDialog = false,
-    String? message,
-  }) async {
+      String path, {
+        dynamic data,
+        int dataLength = 0,
+        Map<String, dynamic>? queryParameters,
+        Options? options,
+        bool isRaw = false,
+        bool isShowLoading = false,
+        bool isShowResultDialog = false,
+        String? message,
+      }) async {
     dio.options.baseUrl = isRaw ? path : HttpSetting.to.baseUrl;
     Options requestOptions = options ?? Options();
     requestOptions.headers = requestOptions.headers ?? {};
@@ -434,7 +434,7 @@ class HttpUtil {
       path,
       data: Stream.fromIterable(data.map((e) => [e])),
       queryParameters: queryParameters,
-      options: requestOptions,
+      options: options ?? requestOptions,
       cancelToken: cancelToken,
     );
     if (isShowLoading) Loading.dismiss();
