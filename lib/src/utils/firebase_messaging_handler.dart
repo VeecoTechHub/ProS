@@ -1,10 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../entities/notification.dart' as model;
+
 
 class FirebaseMessagingHandler {
   static init(
@@ -12,7 +13,6 @@ class FirebaseMessagingHandler {
       VoidCallback onMessageOpenedAppCallback,
       void Function(NotificationResponse notificationResponse)
       notificationTapBackground, {
-        Function(model.Notification)? onReceivedResult,
         required Function(String?) getToken,
       }) async {
     // request permission
@@ -69,16 +69,6 @@ class FirebaseMessagingHandler {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       log(name: "title: ", "${message.notification?.title}");
       log(name: "body: ", "${message.notification?.body}");
-      if (onReceivedResult != null) {
-        onReceivedResult(
-          model.Notification(
-            title: message.notification?.title,
-            message: message.notification?.body,
-            receivedTime: DateTime.now(),
-            isRead: false,
-          ),
-        );
-      }
       final String imageUrl = message.notification?.android?.imageUrl ?? '';
       await flutterLocalNotificationsPlugin.show(
         0,
