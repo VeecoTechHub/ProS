@@ -10,6 +10,7 @@ class ProZIconButton<T> extends StatefulWidget {
     this.padding = EdgeInsets.zero,
     this.onPressed,
     this.items,
+    this.showExclamation = false,
     this.onChanged,
     this.badgeValue = 0,
     this.showBadge = false,
@@ -33,6 +34,7 @@ class ProZIconButton<T> extends StatefulWidget {
   final bool showBadge;
   final Color badgeColor;
   final Color badgeTextColor;
+  final bool showExclamation;
 
   @override
   State<ProZIconButton<T>> createState() => _ProZIconButtonState<T>();
@@ -52,6 +54,7 @@ class _ProZIconButtonState<T> extends State<ProZIconButton<T>> {
         iconColor = const Color(0xffd3af37);
       }
     }
+
     super.initState();
   }
 
@@ -89,7 +92,7 @@ class _ProZIconButtonState<T> extends State<ProZIconButton<T>> {
             ),
           ),
         ),
-        if (widget.badgeValue != 0 && widget.showBadge)
+        if ((widget.badgeValue != 0 || widget.showExclamation != false) && widget.showBadge)
           Positioned(
             top: 5.h,
             right: 5.w,
@@ -103,7 +106,7 @@ class _ProZIconButtonState<T> extends State<ProZIconButton<T>> {
                 shape: BoxShape.circle, // Make it circular
               ),
               child: Text(
-                widget.showBadge ? widget.badgeValue.toString() : "",
+                widget.showExclamation ? "!":widget.showBadge ? widget.badgeValue.toString() : "",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: widget.badgeTextColor,
