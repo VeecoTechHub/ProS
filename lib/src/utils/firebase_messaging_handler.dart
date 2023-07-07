@@ -2,11 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:pro_z/pro_z.dart';
 
-
+final userID = FirebaseAuth.instance.currentUser?.uid.obs;
 class FirebaseMessagingHandler {
   static init(
       Future<void> Function(RemoteMessage) firebaseBackgroundMessageHandle,
@@ -65,10 +68,15 @@ class FirebaseMessagingHandler {
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
 
+
     //handle incoming message
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       log(name: "title: ", "${message.notification?.title}");
       log(name: "body: ", "${message.notification?.body}");
+      //display "!" in notification icon
+      await NotificationRead.to.updateNotification(true);
+      NotificationRead.to.getNewNotification();
+
       final String imageUrl = message.notification?.android?.imageUrl ?? '';
       await flutterLocalNotificationsPlugin.show(
         0,
