@@ -1,28 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:badges/badges.dart' as badges;
 class ProZIconButton<T> extends StatefulWidget {
   const ProZIconButton({
     Key? key,
     this.icon = Icons.more_vert,
-    this.iconColor, // = const Color(0xffd3af37),
-    this.iconSize = 24,
-    this.padding = EdgeInsets.zero,
     this.onPressed,
-    this.items,
-    this.showExclamation = false,
-    this.onChanged,
-    this.badgeValue = 0,
+    this.badgePosition,
+    this.badgeStyle,
+    this.badgeContent = "",
+    this.badgeAnimation,
     this.showBadge = false,
-    this.badgeColor = const Color(0xffd3af37),
-    this.badgeTextColor = Colors.white,
+    this.items,
+    this.onChanged,
   }) : super(key: key);
 
   /// Icon
   final IconData icon;
-  final Color? iconColor;
-  final double iconSize;
-  final EdgeInsets padding;
   final Function()? onPressed;
 
   /// Drop down list
@@ -30,11 +23,11 @@ class ProZIconButton<T> extends StatefulWidget {
   final Function(T)? onChanged;
 
   /// Badge
-  final int badgeValue;
+  final String badgeContent;
+  final badges.BadgePosition? badgePosition;
+  final badges.BadgeStyle? badgeStyle;
   final bool showBadge;
-  final Color badgeColor;
-  final Color badgeTextColor;
-  final bool showExclamation;
+  final badges.BadgeAnimation? badgeAnimation;
 
   @override
   State<ProZIconButton<T>> createState() => _ProZIconButtonState<T>();
@@ -45,77 +38,66 @@ class _ProZIconButtonState<T> extends State<ProZIconButton<T>> {
 
   @override
   void initState() {
-    if (widget.iconColor != null) {
-      iconColor = widget.iconColor!;
+    if (widget.items != null) {
+      iconColor = const Color(0xffd3af37);
     } else {
-      if (widget.showBadge) {
-        iconColor = Colors.white;
-      } else {
-        iconColor = const Color(0xffd3af37);
-      }
+      iconColor = Colors.white;
     }
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: widget.onPressed,
-          onTapDown: (detail) async {
-            if (widget.items != null && widget.onChanged != null) {
-              await showMenu<T>(
-                context: context,
-                position: RelativeRect.fromLTRB(
-                  detail.globalPosition.dx,
-                  detail.globalPosition.dy,
-                  0.0,
-                  0.0,
-                ),
-                items: widget.items!,
-              ).then((value) {
-                if (value != null) {
-                  setState(() {
-                    widget.onChanged!(value);
-                  });
-                }
+    return GestureDetector(
+      onTapDown: (detail) async {
+        if (widget.items != null && widget.onChanged != null) {
+          await showMenu<T>(
+            context: context,
+            position: RelativeRect.fromLTRB(
+              detail.globalPosition.dx,
+              detail.globalPosition.dy,
+              0.0,
+              0.0,
+            ),
+            items: widget.items!,
+          ).then((value) {
+            if (value != null) {
+              setState(() {
+                widget.onChanged!(value);
               });
             }
-          },
-          child: Padding(
-            padding: (widget.padding == EdgeInsets.zero && widget.showBadge) ? EdgeInsets.all(13.h) : widget.padding,
-            child: Icon(
+          });
+        }
+      },
+      child: badges.Badge(
+          showBadge: widget.showBadge,
+          position: widget.badgePosition ?? badges.BadgePosition.topEnd(top: 4, end: 6),
+          badgeStyle: widget.badgeStyle ?? const badges.BadgeStyle(),
+          badgeAnimation:widget.badgeAnimation ?? const badges.BadgeAnimation.slide(
+            animationDuration: Duration(seconds: 1),
+            colorChangeAnimationDuration: Duration(seconds: 1),
+            loopAnimation: false,
+            curve: Curves.bounceInOut,
+            colorChangeAnimationCurve: Curves.easeInCubic,
+          ),
+          onTap: widget.onPressed,
+          badgeContent: SizedBox(
+            height: 18,
+            width: 18,
+            child: Center(
+              child: Text(
+                widget.badgeContent,
+                style: const TextStyle(color: Colors.white, fontSize: 12),
+              ),
+            ),
+          ),
+          child: IconButton(
+            icon:Icon(
               widget.icon,
               color: iconColor,
             ),
-          ),
-        ),
-        if ((widget.badgeValue != 0 || widget.showExclamation != false) && widget.showBadge)
-          Positioned(
-            top: 5.h,
-            right: 5.w,
-            child: Container(
-              padding: EdgeInsets.all(4.w),
-              alignment: Alignment.center,
-              height: 20.h,
-              width: 20.h,
-              decoration: BoxDecoration(
-                color: widget.badgeColor,
-                shape: BoxShape.circle, // Make it circular
-              ),
-              child: Text(
-                widget.showExclamation ? "!":widget.showBadge ? widget.badgeValue.toString() : "",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: widget.badgeTextColor,
-                  fontSize: 10.sp,
-                ),
-              ),
-            ),
-          ),
-      ],
+            onPressed:widget.onPressed, // Add an icon to the IconButton
+          )),
     );
   }
 }

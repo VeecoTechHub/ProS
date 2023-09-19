@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -21,7 +23,7 @@ class FirebaseAuthHandler extends GetxController {
       await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) {
-        print(_firebaseAuth.currentUser.toString());
+        log(_firebaseAuth.currentUser.toString());
       });
       if (_firebaseAuth.currentUser != null && googleAuth.currentUser != null) {
         final GoogleSignInAccount? googleSignInAccount =

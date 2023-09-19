@@ -8,8 +8,8 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' hide FormData;
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:pro_z/src/store/store_index.dart';
+import 'package:pro_z/src/utils/proz_dio_logger.dart';
 
 import 'loading.dart';
 
@@ -17,7 +17,6 @@ class HttpUtil {
   static final HttpUtil _instance = HttpUtil._internal();
 
   factory HttpUtil() => _instance;
-
 
   late Dio dio;
   CancelToken cancelToken = CancelToken();
@@ -56,7 +55,8 @@ class HttpUtil {
 
     dio = Dio(options);
 
-    (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+    (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+      final client = HttpClient();
       client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
       return client;
     };
@@ -82,7 +82,7 @@ class HttpUtil {
         // 如果你想终止请求并触发一个错误,你可以 reject 一个`DioError`对象,如`handler.reject(error)`，
         // 这样请求将被中止并触发异常，上层catchError会被调用。
       },
-      onError: (DioError e, handler) {
+      onError: (DioException e, handler) {
         // Do something with response error
         Loading.dismiss();
         ErrorEntity eInfo = createErrorEntity(e);
@@ -92,7 +92,7 @@ class HttpUtil {
         // 这样请求将会被终止，上层then会被调用，then中返回的数据将是你的自定义response.
       },
     ));
-    dio.interceptors.add(PrettyDioLogger(responseBody: false, maxWidth: 100));
+    dio.interceptors.add(ProZDioLogger(responseBody: false, maxWidth: 100));
   }
 
   /*
@@ -114,17 +114,17 @@ class HttpUtil {
   }
 
   // 错误信息
-  ErrorEntity createErrorEntity(DioError error) {
+  ErrorEntity createErrorEntity(DioException error) {
     switch (error.type) {
-      case DioErrorType.cancel:
+      case DioException.requestCancelled:
         return ErrorEntity(code: -1, message: "Request to cancel");
-      case DioErrorType.connectionTimeout:
+      case DioException.connectionTimeout:
         return ErrorEntity(code: -1, message: "Connection timed out");
-      case DioErrorType.sendTimeout:
+      case DioException.sendTimeout:
         return ErrorEntity(code: -1, message: "Request timed out");
-      case DioErrorType.receiveTimeout:
+      case DioException.receiveTimeout:
         return ErrorEntity(code: -1, message: "Response timeout");
-      case DioErrorType.badResponse:
+      case DioException.badResponse:
         {
           try {
             int errCode = error.response != null ? error.response!.statusCode! : -1;

@@ -62,7 +62,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     super.initState();
     if (widget.source.runtimeType == String) {
       //'VideoPlayerController.network' is deprecated and shouldn't be used. Use VideoPlayerController.networkUrl instead.
-      _controller = VideoPlayerController.network(widget.source)
+      _controller = VideoPlayerController.networkUrl(widget.source)
         ..initialize().then((_) {
           setState(() {});
         });
