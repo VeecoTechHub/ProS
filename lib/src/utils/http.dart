@@ -18,6 +18,7 @@ class HttpUtil {
 
   factory HttpUtil() => _instance;
 
+
   late Dio dio;
   CancelToken cancelToken = CancelToken();
 
