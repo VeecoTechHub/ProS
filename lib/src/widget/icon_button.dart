@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+
 class ProZIconButton<T> extends StatefulWidget {
   const ProZIconButton({
     Key? key,
@@ -73,13 +74,12 @@ class _ProZIconButtonState<T> extends State<ProZIconButton<T>> {
           showBadge: widget.showBadge,
           position: widget.badgePosition ?? badges.BadgePosition.topEnd(top: 4, end: 6),
           badgeStyle: widget.badgeStyle ?? const badges.BadgeStyle(),
-          badgeAnimation:widget.badgeAnimation ?? const badges.BadgeAnimation.slide(
-            animationDuration: Duration(seconds: 1),
-            colorChangeAnimationDuration: Duration(seconds: 1),
-            loopAnimation: false,
-            curve: Curves.bounceInOut,
-            colorChangeAnimationCurve: Curves.easeInCubic,
-          ),
+          badgeAnimation: widget.badgeAnimation ??
+              const badges.BadgeAnimation.slide(
+                animationDuration: Duration(seconds: 1),
+                colorChangeAnimationDuration: Duration(microseconds: 5000),
+                loopAnimation: false,
+              ),
           onTap: widget.onPressed,
           badgeContent: SizedBox(
             height: 18,
@@ -92,11 +92,11 @@ class _ProZIconButtonState<T> extends State<ProZIconButton<T>> {
             ),
           ),
           child: IconButton(
-            icon:Icon(
+            icon: Icon(
               widget.icon,
               color: iconColor,
             ),
-            onPressed:widget.onPressed, // Add an icon to the IconButton
+            onPressed: widget.onPressed, // Add an icon to the IconButton
           )),
     );
   }
