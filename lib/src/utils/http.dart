@@ -8,8 +8,8 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' hide FormData;
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:pro_z/src/store/store_index.dart';
+import 'package:pro_z/src/utils/proz_dio_logger.dart';
 
 import 'loading.dart';
 
@@ -91,7 +91,7 @@ class HttpUtil {
         // 这样请求将会被终止，上层then会被调用，then中返回的数据将是你的自定义response.
       },
     ));
-    dio.interceptors.add(PrettyDioLogger(responseBody: false, maxWidth: 100));
+    dio.interceptors.add(ProZDioLogger(responseBody: false, maxWidth: 100));
   }
 
   /*

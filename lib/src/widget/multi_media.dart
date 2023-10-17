@@ -89,7 +89,7 @@ class _VideoWidgetState extends State<VideoWidget> {
   void initState() {
     super.initState();
     if (widget.source.runtimeType == String) {
-      _controller = VideoPlayerController.network(widget.source)
+      _controller = VideoPlayerController.networkUrl(widget.source)
         ..initialize().then((_) {
           setState(() {});
         });
