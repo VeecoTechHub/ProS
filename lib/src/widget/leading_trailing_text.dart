@@ -27,6 +27,8 @@ class ProZRow extends StatefulWidget {
   final IconData? trailingIcon;
   final bool defaultVisualDensity;
   final double? leadingWidth, trailingWidth;
+  final EdgeInsets? contentPadding;
+  final double? minimalVerticalPadding;
 
   const ProZRow(
       {Key? key,
@@ -59,7 +61,9 @@ class ProZRow extends StatefulWidget {
       this.trailingIcon,
       this.defaultVisualDensity = false,
       this.leadingWidth,
-      this.trailingWidth})
+      this.trailingWidth,
+      this.contentPadding,
+      this.minimalVerticalPadding})
       : super(key: key);
 
   @override
@@ -76,6 +80,7 @@ class ProZRowState extends State<ProZRow> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.leadingIcon != null) ...[
                   Icon(widget.leadingIcon),
@@ -114,58 +119,54 @@ class ProZRowState extends State<ProZRow> {
   }
 
   Widget buildTrailing() {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: widget.trailing ??
-          SizedBox(
-            width: widget.trailingWidth ?? 0.5.sw,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (widget.trailingIcon != null) ...[
-                  Icon(widget.trailingIcon),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                ],
-                if (widget.trailingMediaSource != null) ...[
-                  ProZMultiMedia(
-                    source: widget.trailingMediaSource,
-                    width: widget.trailingMediaWidth ?? 20,
-                    height: widget.trailingMediaHeight ?? 20,
-                    margin: widget.trailingMediaMargin,
-                    padding: widget.trailingMediaPadding,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                ],
-                Expanded(
-                  child: Text(
-                    widget.trailingText ?? "",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: widget.trailingTextColor ?? widget.allColor,
-                      fontWeight: widget.trailingFontWeight ?? widget.allFontWeight,
-                      fontSize: widget.trailingFontSize ?? widget.allFontSize,
-                    ),
-                  ),
+    return widget.trailing ??
+        SizedBox(
+          width: widget.trailingWidth ?? 0.5.sw,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (widget.trailingIcon != null) ...[
+                Icon(widget.trailingIcon),
+                const SizedBox(
+                  width: 10,
                 ),
               ],
-            ),
+              if (widget.trailingMediaSource != null) ...[
+                ProZMultiMedia(
+                  source: widget.trailingMediaSource,
+                  width: widget.trailingMediaWidth ?? 20,
+                  height: widget.trailingMediaHeight ?? 20,
+                  margin: widget.trailingMediaMargin,
+                  padding: widget.trailingMediaPadding,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
+              Text(
+                widget.trailingText ?? "",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: widget.trailingTextColor ?? widget.allColor,
+                  fontWeight: widget.trailingFontWeight ?? widget.allFontWeight,
+                  fontSize: widget.trailingFontSize ?? widget.allFontSize,
+                ),
+              ),
+            ],
           ),
-    );
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      dense: true,
-      minVerticalPadding: -4,
-      contentPadding: EdgeInsets.zero,
-      visualDensity: widget.defaultVisualDensity ? VisualDensity.compact : const VisualDensity(horizontal: -4, vertical: -4),
+      dense: widget.defaultVisualDensity ? false : true,
+      minVerticalPadding: widget.minimalVerticalPadding ?? -4,
+      contentPadding: widget.contentPadding ?? EdgeInsets.zero,
+      visualDensity: widget.defaultVisualDensity ? VisualDensity.adaptivePlatformDensity : const VisualDensity(horizontal: -4, vertical: -4),
       leading: buildLeading(),
       trailing: buildTrailing(),
       key: widget.key,
