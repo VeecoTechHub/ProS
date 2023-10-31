@@ -7,21 +7,22 @@ class ProZTabBarView extends StatefulWidget {
     required this.pages,
     this.onTap,
     this.onPageChanged,
+    this.textStyle,
     this.isScrollable = false,
   }) : super(key: key);
   final List<String> labels;
+  final TextStyle? textStyle;
   final List<Widget> pages;
   final Function(int)? onTap, onPageChanged;
   final bool isScrollable;
 
   @override
-  State<ProZTabBarView> createState() => _ProZTabBarViewState();
+  State<ProZTabBarView> createState() => ProZTabBarViewState();
 }
 
-class _ProZTabBarViewState extends State<ProZTabBarView> with SingleTickerProviderStateMixin {
+class ProZTabBarViewState extends State<ProZTabBarView> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedIndex = 0;
-
+  int _selectedIndex = 1;
   @override
   void initState() {
     super.initState();
@@ -40,9 +41,19 @@ class _ProZTabBarViewState extends State<ProZTabBarView> with SingleTickerProvid
     super.dispose();
   }
 
+  void changeTab(int index) {
+    _tabController.animateTo(index);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<Widget> myTabs = List.generate(widget.labels.length, (index) => Tab(text: widget.labels[index]));
+    final List<Widget> myTabs = List.generate(
+        widget.labels.length,
+        (index) => Tab(
+                child: Text(
+              widget.labels[index],
+              style: widget.textStyle ?? const TextStyle(),
+            )));
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
