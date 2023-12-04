@@ -2,16 +2,20 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 
-import '../entities/notification.dart' as model;
+final userID = FirebaseAuth.instance.currentUser?.uid.obs;
 
-class FirebaseMassagingHandler {
+class FirebaseMessagingHandler {
   static init(
+    Future<void> Function(RemoteMessage) firebaseBackgroundMessageHandle,
+    VoidCallback onMessageOpenedAppCallback,
     void Function(NotificationResponse notificationResponse) notificationTapBackground, {
-    Function(model.Notification)? onReceivedResult,
+    required Function(String?) getToken,
   }) async {
     // request permission
     FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -41,34 +45,29 @@ class FirebaseMassagingHandler {
     // Get the FCM token
     await FirebaseMessaging.instance.getToken().then((token) async {
       log(name: "FCM: ", "$token");
+      getToken(token);
       final name = Platform.isAndroid ? 'Android' : 'iOS';
       await FirebaseFirestore.instance.collection("UserTokens").doc(name).set({'token': token});
     });
     // Customize Notification
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(
+    await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
         iOS: DarwinInitializationSettings(),
       ),
       onDidReceiveNotificationResponse: (payload) {
+        onMessageOpenedAppCallback();
         print(payload);
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
+
+    //handle incoming message
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       log(name: "title: ", "${message.notification?.title}");
       log(name: "body: ", "${message.notification?.body}");
-      if (onReceivedResult != null) {
-        onReceivedResult(
-          model.Notification(
-            title: message.notification?.title,
-            message: message.notification?.body,
-            receivedTime: DateTime.now(),
-            isRead: false,
-          ),
-        );
-      }
+
       final String imageUrl = message.notification?.android?.imageUrl ?? '';
       await flutterLocalNotificationsPlugin.show(
         0,
@@ -103,9 +102,11 @@ class FirebaseMassagingHandler {
         payload: message.data['body'],
       );
     });
+
+    //message handler when app is in background/terminated state
+    FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessageHandle);
   }
-}
-// class FirebaseMassagingHandler {
+} // class FirebaseMassagingHandler {
 //   FirebaseMassagingHandler._();
 //
 //   static AndroidNotificationChannel channel_call = const AndroidNotificationChannel(
