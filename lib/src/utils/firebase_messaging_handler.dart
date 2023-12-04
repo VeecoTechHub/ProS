@@ -1,7 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +44,6 @@ class FirebaseMessagingHandler {
     await FirebaseMessaging.instance.getToken().then((token) async {
       log(name: "FCM: ", "$token");
       getToken(token);
-      final name = Platform.isAndroid ? 'Android' : 'iOS';
-      await FirebaseFirestore.instance.collection("UserTokens").doc(name).set({'token': token});
     });
     // Customize Notification
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();

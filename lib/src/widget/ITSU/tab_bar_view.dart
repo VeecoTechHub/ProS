@@ -5,12 +5,14 @@ class ProZTabBarView extends StatefulWidget {
     Key? key,
     required this.labels,
     required this.pages,
+    this.index = 0,
     this.onTap,
     this.onPageChanged,
     this.textStyle,
     this.isScrollable = false,
     this.labelPadding,
   }) : super(key: key);
+  final int index;
   final List<String> labels;
   final TextStyle? textStyle;
   final List<Widget> pages;
@@ -29,6 +31,9 @@ class ProZTabBarViewState extends State<ProZTabBarView> with SingleTickerProvide
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: widget.labels.length);
+    setState(() {
+      _tabController.index = widget.index;
+    });
     _tabController.addListener(() {
       setState(() {
         _selectedIndex = _tabController.index;
