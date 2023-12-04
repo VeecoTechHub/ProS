@@ -69,21 +69,31 @@ class FirebaseMassagingHandler {
           ),
         );
       }
+      final String imageUrl = message.notification?.android?.imageUrl ?? '';
       await flutterLocalNotificationsPlugin.show(
         0,
         message.notification?.title,
         message.notification?.body,
         NotificationDetails(
           android: AndroidNotificationDetails(
-            'veecotech',
-            'veecotech',
+            message.notification?.android?.channelId ?? 'veecotech',
+            message.notification?.android?.channelId ?? 'veecotech',
             importance: Importance.high,
-            styleInformation: BigTextStyleInformation(
-              message.notification!.body.toString(),
-              htmlFormatBigText: true,
-              contentTitle: message.notification!.title.toString(),
-              htmlFormatContentTitle: true,
-            ),
+            styleInformation: imageUrl.isNotEmpty
+                ? BigPictureStyleInformation(
+                    hideExpandedLargeIcon: true,
+                    FilePathAndroidBitmap(imageUrl),
+                    contentTitle: message.notification!.title.toString(),
+                    summaryText: message.notification!.body.toString(),
+                    htmlFormatContentTitle: true,
+                    htmlFormatSummaryText: true,
+                  )
+                : BigTextStyleInformation(
+                    message.notification!.body.toString(),
+                    htmlFormatBigText: true,
+                    contentTitle: message.notification!.title.toString(),
+                    htmlFormatContentTitle: true,
+                  ),
             priority: Priority.high,
             playSound: true,
             // sound: const RawResourceAndroidNotificationSound('notification_sound'),
