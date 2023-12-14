@@ -1,17 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pinput/pinput.dart';
 import 'package:pro_z/pro_z.dart';
 
 class FirebaseAuthHandler extends GetxController {
   static FirebaseAuthHandler get to => Get.find();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn googleAuth = GoogleSignIn();
-  final FacebookAuth _facebookAuth = FacebookAuth.instance;
   String verificationId = '';
 
   Future<User?> loginWithEmailAndPassword({required String email, String password = "Password123!", bool autoCreate = false}) async {
@@ -19,14 +15,7 @@ class FirebaseAuthHandler extends GetxController {
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password).then((value) {
         print(_firebaseAuth.currentUser.toString());
       });
-      if (_firebaseAuth.currentUser != null && googleAuth.currentUser != null) {
-        final GoogleSignInAccount? googleSignInAccount = await googleAuth.signInSilently();
-        final GoogleSignInAuthentication? googleSignInAuthentication = await googleSignInAccount?.authentication;
-        await _firebaseAuth.currentUser?.linkWithCredential(GoogleAuthProvider.credential(
-          accessToken: googleSignInAuthentication?.accessToken,
-          idToken: googleSignInAuthentication?.idToken,
-        ));
-      }
+
       return _firebaseAuth.currentUser;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
@@ -55,14 +44,6 @@ class FirebaseAuthHandler extends GetxController {
   Future<User?> registerWithEmailAndPassword({required String email, String password = "Password123!"}) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      if (_firebaseAuth.currentUser != null && googleAuth.currentUser != null) {
-        final GoogleSignInAccount? googleSignInAccount = await googleAuth.signInSilently();
-        final GoogleSignInAuthentication? googleSignInAuthentication = await googleSignInAccount?.authentication;
-        await _firebaseAuth.currentUser?.linkWithCredential(GoogleAuthProvider.credential(
-          accessToken: googleSignInAuthentication?.accessToken,
-          idToken: googleSignInAuthentication?.idToken,
-        ));
-      }
       return _firebaseAuth.currentUser;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
@@ -77,22 +58,6 @@ class FirebaseAuthHandler extends GetxController {
       print(e);
     }
     return null;
-  }
-
-  Future<GoogleSignInAccount?> loginWithGoogle() async {
-    final GoogleSignInAccount? googleSignInAccount = await googleAuth.signIn();
-    final GoogleSignInAuthentication? googleSignInAuthentication = await googleSignInAccount?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication?.accessToken,
-      idToken: googleSignInAuthentication?.idToken,
-    );
-    final isAccountUsed = await isEmailUsed(googleSignInAccount?.email);
-    if (!isAccountUsed && _firebaseAuth.currentUser != null) {
-      await _firebaseAuth.currentUser?.linkWithCredential(credential);
-    } else if (isAccountUsed) {
-      await _firebaseAuth.signInWithCredential(credential);
-    }
-    return googleAuth.currentUser;
   }
 
   Future<bool> isEmailUsed(String? email) async {
@@ -114,8 +79,6 @@ class FirebaseAuthHandler extends GetxController {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-    await googleAuth.signOut();
-    await _facebookAuth.logOut();
     await _firebaseAuth.currentUser?.reload();
   }
 
