@@ -29,6 +29,7 @@ class ProZRow extends StatefulWidget {
   final double? leadingWidth, trailingWidth;
   final EdgeInsets? contentPadding;
   final double? minimalVerticalPadding;
+  final VisualDensity? visualDensity;
 
   const ProZRow(
       {Key? key,
@@ -63,7 +64,8 @@ class ProZRow extends StatefulWidget {
       this.leadingWidth,
       this.trailingWidth,
       this.contentPadding,
-      this.minimalVerticalPadding})
+      this.minimalVerticalPadding,
+      this.visualDensity})
       : super(key: key);
 
   @override
@@ -103,7 +105,7 @@ class ProZRowState extends State<ProZRow> {
                 Expanded(
                   child: Text(
                     widget.leadingText ?? "",
-                    maxLines: 2,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: widget.leadingTextColor ?? widget.allColor,
@@ -145,14 +147,17 @@ class ProZRowState extends State<ProZRow> {
                   width: 10,
                 ),
               ],
-              Text(
-                widget.trailingText ?? "",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: widget.trailingTextColor ?? widget.allColor,
-                  fontWeight: widget.trailingFontWeight ?? widget.allFontWeight,
-                  fontSize: widget.trailingFontSize ?? widget.allFontSize,
+              Expanded(
+                child: Text(
+                  widget.trailingText ?? "",
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: widget.trailingTextColor ?? widget.allColor,
+                    fontWeight: widget.trailingFontWeight ?? widget.allFontWeight,
+                    fontSize: widget.trailingFontSize ?? widget.allFontSize,
+                  ),
+                  textAlign: TextAlign.end,
                 ),
               ),
             ],
@@ -166,7 +171,7 @@ class ProZRowState extends State<ProZRow> {
       dense: widget.defaultVisualDensity ? false : true,
       minVerticalPadding: widget.minimalVerticalPadding ?? -4,
       contentPadding: widget.contentPadding ?? EdgeInsets.zero,
-      visualDensity: widget.defaultVisualDensity ? VisualDensity.adaptivePlatformDensity : const VisualDensity(horizontal: -4, vertical: -4),
+      visualDensity: widget.visualDensity ?? (widget.defaultVisualDensity ? VisualDensity.adaptivePlatformDensity : const VisualDensity(horizontal: -4, vertical: -4)),
       leading: buildLeading(),
       trailing: buildTrailing(),
       key: widget.key,
