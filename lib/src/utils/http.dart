@@ -104,6 +104,7 @@ class HttpUtil {
     debugPrint("error.code -> ${eInfo.code}, error.message -> ${eInfo.message}");
     switch (eInfo.code) {
       case 401:
+      case 404:
         // UserStore.to.onLogout();
         EasyLoading.showError(eInfo.message);
         break;
