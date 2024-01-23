@@ -59,45 +59,51 @@ class FirebaseMessagingHandler {
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
 
-    //handle incoming message
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      log(name: "title: ", "${message.notification?.title}");
-      log(name: "body: ", "${message.notification?.body}");
+    var androidNotificationChannel = const AndroidNotificationChannel(
+      "Push Notification",
+      "Push Notification",
+    );
+    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(androidNotificationChannel);
 
-      final String imageUrl = message.notification?.android?.imageUrl ?? '';
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        message.notification?.title,
-        message.notification?.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            message.notification?.android?.channelId ?? 'veecotech',
-            message.notification?.android?.channelId ?? 'veecotech',
-            importance: Importance.high,
-            styleInformation: imageUrl.isNotEmpty
-                ? BigPictureStyleInformation(
-                    hideExpandedLargeIcon: true,
-                    FilePathAndroidBitmap(imageUrl),
-                    contentTitle: message.notification!.title.toString(),
-                    summaryText: message.notification!.body.toString(),
-                    htmlFormatContentTitle: true,
-                    htmlFormatSummaryText: true,
-                  )
-                : BigTextStyleInformation(
-                    message.notification!.body.toString(),
-                    htmlFormatBigText: true,
-                    contentTitle: message.notification!.title.toString(),
-                    htmlFormatContentTitle: true,
-                  ),
-            priority: Priority.high,
-            playSound: true,
-            // sound: const RawResourceAndroidNotificationSound('notification_sound'),
-          ),
-          iOS: const DarwinNotificationDetails(/*sound: 'notification_sound.aiff'*/),
-        ),
-        payload: message.data['body'],
-      );
-    });
+    // //handle incoming message
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    //   log(name: "title: ", "${message.notification?.title}");
+    //   log(name: "body: ", "${message.notification?.body}");
+    //   log(name: "data: ", "${message.data}");
+    //   final String imageUrl = message.notification?.android?.imageUrl ?? '';
+    //   await flutterLocalNotificationsPlugin.show(
+    //     0,
+    //     message.notification?.title,
+    //     message.notification?.body,
+    //     NotificationDetails(
+    //       android: AndroidNotificationDetails(
+    //         message.notification?.android?.channelId ?? 'Push Notification',
+    //         message.notification?.android?.channelId ?? 'Push Notification',
+    //         importance: Importance.high,
+    //         styleInformation: imageUrl.isNotEmpty
+    //             ? BigPictureStyleInformation(
+    //                 hideExpandedLargeIcon: true,
+    //                 FilePathAndroidBitmap(imageUrl),
+    //                 contentTitle: message.notification!.title.toString(),
+    //                 summaryText: message.notification!.body.toString(),
+    //                 htmlFormatContentTitle: true,
+    //                 htmlFormatSummaryText: true,
+    //               )
+    //             : BigTextStyleInformation(
+    //                 message.notification!.body.toString(),
+    //                 htmlFormatBigText: true,
+    //                 contentTitle: message.notification!.title.toString(),
+    //                 htmlFormatContentTitle: true,
+    //               ),
+    //         priority: Priority.high,
+    //         playSound: true,
+    //         // sound: const RawResourceAndroidNotificationSound('notification_sound'),
+    //       ),
+    //       iOS: const DarwinNotificationDetails(/*sound: 'notification_sound.aiff'*/),
+    //     ),
+    //     payload: message.data['body'],
+    //   );
+    // });
 
     //message handler when app is in background/terminated state
     FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessageHandle);
