@@ -35,6 +35,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.1
 flutter:
-  uses-material-design: true
   assets:
     - assets/images/
+    - assets/PDF_file_icon.png

@@ -43,7 +43,7 @@ class _ProZMultiMediaState extends State<ProZMultiMedia> {
       final File data = widget.source;
       if (widget.source.toString().toLowerCase().contains("pdf")) {
         return Image.asset(
-          "assets/images/PDF_file_icon.png",
+          "assets/PDF_file_icon.png",
           fit: widget.fit,
         );
       } else if (data.mediaType() == MediaType.video) {
