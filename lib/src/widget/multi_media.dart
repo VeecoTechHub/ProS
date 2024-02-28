@@ -41,14 +41,18 @@ class _ProZMultiMediaState extends State<ProZMultiMedia> {
   Widget content() {
     if (widget.source.runtimeType.toString() == '_File') {
       final File data = widget.source;
-      if (data.mediaType() == MediaType.image) {
+      if (widget.source.toString().toLowerCase().contains("pdf")) {
+        return Image.asset(
+          "assets/images/PDF_file_icon.png",
+          fit: widget.fit,
+        );
+      } else if (data.mediaType() == MediaType.video) {
+        return VideoWidget(source: data);
+      } else if (data.mediaType() == MediaType.image) {
         return Image.file(
           data,
           fit: widget.fit,
         );
-      }
-      if (data.mediaType() == MediaType.video) {
-        return VideoWidget(source: data);
       }
     }
     if (widget.source.runtimeType == String) {
