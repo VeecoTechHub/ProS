@@ -57,6 +57,12 @@ class _ProZMultiMediaState extends State<ProZMultiMedia> {
     }
     if (widget.source.runtimeType == String) {
       final String data = widget.source;
+      if (data.toLowerCase().contains("pdf")) {
+        return Image.network(
+          "https://agentnow.veecotech.com.my/storage/app/public/3379/conversions/PDF_file_icon.svg-4-thumb.jpg",
+          fit: BoxFit.fill,
+        );
+      }
       if (data.mediaType() == MediaType.image) {
         if (data.isURL) {
           return Image.network(
