@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.5
-  get: ^4.6.5
+  get: ^4.6.6
   intl: ^0.18.1
   flutter_screenutil: ^5.8.4
   video_player: ^2.7.0
