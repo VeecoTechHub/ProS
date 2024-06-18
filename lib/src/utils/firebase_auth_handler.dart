@@ -15,23 +15,15 @@ class FirebaseAuthHandler extends GetxController {
   final FacebookAuth _facebookAuth = FacebookAuth.instance;
   String verificationId = '';
 
-  Future<User?> loginWithEmailAndPassword(
-      {required String email,
-      String password = "Password123!",
-      bool autoCreate = false}) async {
+  Future<User?> loginWithEmailAndPassword({required String email, String password = "Password123!", bool autoCreate = false}) async {
     try {
-      await _firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) {
+      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password).then((value) {
         log(_firebaseAuth.currentUser.toString());
       });
       if (_firebaseAuth.currentUser != null && googleAuth.currentUser != null) {
-        final GoogleSignInAccount? googleSignInAccount =
-            await googleAuth.signInSilently();
-        final GoogleSignInAuthentication? googleSignInAuthentication =
-            await googleSignInAccount?.authentication;
-        await _firebaseAuth.currentUser
-            ?.linkWithCredential(GoogleAuthProvider.credential(
+        final GoogleSignInAccount? googleSignInAccount = await googleAuth.signInSilently();
+        final GoogleSignInAuthentication? googleSignInAuthentication = await googleSignInAccount?.authentication;
+        await _firebaseAuth.currentUser?.linkWithCredential(GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication?.accessToken,
           idToken: googleSignInAuthentication?.idToken,
         ));
@@ -42,8 +34,7 @@ class FirebaseAuthHandler extends GetxController {
         case 'user-not-found':
           if (autoCreate) {
             Loading.show('Creating Account');
-            return await registerWithEmailAndPassword(email: email)
-                .then((value) {
+            return await registerWithEmailAndPassword(email: email).then((value) {
               Loading.dismiss();
               return value;
             });
@@ -62,18 +53,13 @@ class FirebaseAuthHandler extends GetxController {
     return null;
   }
 
-  Future<User?> registerWithEmailAndPassword(
-      {required String email, String password = "Password123!"}) async {
+  Future<User?> registerWithEmailAndPassword({required String email, String password = "Password123!"}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       if (_firebaseAuth.currentUser != null && googleAuth.currentUser != null) {
-        final GoogleSignInAccount? googleSignInAccount =
-            await googleAuth.signInSilently();
-        final GoogleSignInAuthentication? googleSignInAuthentication =
-            await googleSignInAccount?.authentication;
-        await _firebaseAuth.currentUser
-            ?.linkWithCredential(GoogleAuthProvider.credential(
+        final GoogleSignInAccount? googleSignInAccount = await googleAuth.signInSilently();
+        final GoogleSignInAuthentication? googleSignInAuthentication = await googleSignInAccount?.authentication;
+        await _firebaseAuth.currentUser?.linkWithCredential(GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication?.accessToken,
           idToken: googleSignInAuthentication?.idToken,
         ));
@@ -96,8 +82,7 @@ class FirebaseAuthHandler extends GetxController {
 
   Future<GoogleSignInAccount?> loginWithGoogle() async {
     final GoogleSignInAccount? googleSignInAccount = await googleAuth.signIn();
-    final GoogleSignInAuthentication? googleSignInAuthentication =
-        await googleSignInAccount?.authentication;
+    final GoogleSignInAuthentication? googleSignInAuthentication = await googleSignInAccount?.authentication;
     final credential = GoogleAuthProvider.credential(
       accessToken: googleSignInAuthentication?.accessToken,
       idToken: googleSignInAuthentication?.idToken,
@@ -145,8 +130,7 @@ class FirebaseAuthHandler extends GetxController {
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         timeout: const Duration(seconds: 0),
-        verificationCompleted:
-            (PhoneAuthCredential phoneAuthCredential) async {},
+        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {},
         verificationFailed: onFailed,
         codeSent: (id, token) async {
           verificationId = id;
@@ -179,23 +163,17 @@ class FirebaseAuthHandler extends GetxController {
     Map<String, String>? syncData,
   }) async {
     try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId, smsCode: otpCode);
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otpCode);
       if (syncData != null) {
-        await loginWithEmailAndPassword(
-                email: syncData['email']!, autoCreate: true)
-            .then((value) async {
+        await loginWithEmailAndPassword(email: syncData['email']!, autoCreate: true).then((value) async {
           if (_firebaseAuth.currentUser != null) {
-            await _firebaseAuth.currentUser
-                ?.updateDisplayName(syncData['name']!);
+            await _firebaseAuth.currentUser?.updateDisplayName(syncData['name']!);
             await _firebaseAuth.currentUser?.linkWithCredential(credential);
             onSuccess();
           }
         });
       } else {
-        await _firebaseAuth
-            .signInWithCredential(credential)
-            .then((value) => value.user != null ? onSuccess() : null);
+        await _firebaseAuth.signInWithCredential(credential).then((value) => value.user != null ? onSuccess() : null);
       }
     } on FirebaseAuthException catch (e) {
       Loading.error(e.message);
@@ -232,8 +210,6 @@ class FirebaseAuthHandler extends GetxController {
                   length: 6,
                   showCursor: true,
                   autofocus: true,
-                  androidSmsAutofillMethod:
-                      AndroidSmsAutofillMethod.smsUserConsentApi,
                   defaultPinTheme: PinTheme(
                     width: 60,
                     height: 60,
