@@ -10,12 +10,15 @@ class StorageService extends GetxService {
   final StreamingSharedPreferences preferences;
 
   static StorageService get to => Get.find();
+
   late final SharedPreferences _prefs;
 
   Future<StorageService> init() async {
     _prefs = await SharedPreferences.getInstance();
     return this;
   }
+
+  Future<void> clear() => _prefs.clear();
 
   Future<bool> setString(String key, String value) async {
     return await _prefs.setString(key, value);
