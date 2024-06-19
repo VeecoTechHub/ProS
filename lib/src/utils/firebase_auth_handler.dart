@@ -113,7 +113,7 @@ class FirebaseAuthHandler extends GetxController {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-    await googleAuth.signOut();
+    await googleAuth.disconnect();
     // await _facebookAuth.logOut();
     // await _firebaseAuth.currentUser?.reload();
   }
