@@ -101,7 +101,7 @@ class FirebaseAuthHandler extends GetxController {
 
   Future<bool> updateEmail(String email) async {
     if (_firebaseAuth.currentUser != null) {
-      await _firebaseAuth.currentUser?.updateEmail(email);
+      await _firebaseAuth.currentUser?.verifyBeforeUpdateEmail(email);
       return true;
     }
     return false;
@@ -113,7 +113,7 @@ class FirebaseAuthHandler extends GetxController {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-    await googleAuth.disconnect();
+    if (await googleAuth.isSignedIn()) await googleAuth.disconnect();
     // await _facebookAuth.logOut();
     // await _firebaseAuth.currentUser?.reload();
   }
