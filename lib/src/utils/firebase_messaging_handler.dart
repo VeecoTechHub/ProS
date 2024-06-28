@@ -14,8 +14,7 @@ final userID = FirebaseAuth.instance.currentUser?.uid.obs;
 class FirebaseMessagingHandler {
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  static init(
-    VoidCallback onMessageOpenedAppCallback, {
+  static init({
     required Function(String?) getToken,
   }) async {
     // request permission
@@ -55,10 +54,6 @@ class FirebaseMessagingHandler {
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
         iOS: DarwinInitializationSettings(),
       ),
-      onDidReceiveNotificationResponse: (payload) {
-        onMessageOpenedAppCallback();
-        print(payload);
-      },
     );
 
     var androidNotificationChannel = const AndroidNotificationChannel(
