@@ -15,7 +15,6 @@ class FirebaseMessagingHandler {
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static init(
-    Future<void> Function(RemoteMessage) firebaseBackgroundMessageHandle,
     VoidCallback onMessageOpenedAppCallback, {
     required Function(String?) getToken,
   }) async {
