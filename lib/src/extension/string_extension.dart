@@ -20,6 +20,7 @@ extension StringExtension on String? {
     if (this == null) {
       return '';
     }
+    final nric = this!;
     String year = this!.substring(0, 2);
     String month = int.parse(this!.substring(2, 4)).toString();
     String day = this!.substring(4, 6);
@@ -27,7 +28,41 @@ extension StringExtension on String? {
     String decade = now.substring(0, 2);
     year = int.parse(now.substring(2, 4)) > int.parse(year) ? decade + year : "19$year";
     DateTime dob = DateTime(int.parse(year), int.parse(month), int.parse(day));
-    return DateFormat(format).format(dob);
+    return nric.isValidNRIC ? DateFormat(format).format(dob) : '';
+  }
+
+  bool get isValidNRIC {
+    // Check if the IC number is valid
+    if (this?.length != 12) {
+      return false; // IC number should have exactly 12 digits
+    }
+
+    // Extract the birthdate part from the IC number
+    String birthdateStr = this!.substring(0, 6); // YYMMDD
+
+    // Extract date parts
+    String dayStr = birthdateStr.substring(4, 6);
+    String monthStr = birthdateStr.substring(2, 4);
+    String yearStr = birthdateStr.substring(0, 2);
+
+    // Convert YY to YYYY, considering the century
+    int year = int.parse(yearStr) >= 22 ? 1900 + int.parse(yearStr) : 2000 + int.parse(yearStr);
+    int month = int.parse(monthStr);
+    int day = int.parse(dayStr);
+
+    // Check for valid month and day
+    if (month < 1 || month > 12) {
+      return false;
+    }
+
+    // Check for valid day based on month and year
+    try {
+      DateTime birthdate = DateTime(year, month, day);
+      // Check if the day is valid for the given month and year
+      return birthdate.day == day;
+    } catch (e) {
+      return false;
+    }
   }
 
   String get toGender => int.parse(this!.substring(this!.length - 1)) % 2 == 0 ? 'Female' : 'Male';
