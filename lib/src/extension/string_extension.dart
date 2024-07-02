@@ -21,7 +21,7 @@ extension StringExtension on String? {
       return '';
     }
     String year = this!.substring(0, 2);
-    String month = this!.substring(2, 4);
+    String month = int.parse(this!.substring(2, 4)).toString();
     String day = this!.substring(4, 6);
     String now = DateTime.now().toString();
     String decade = now.substring(0, 2);
