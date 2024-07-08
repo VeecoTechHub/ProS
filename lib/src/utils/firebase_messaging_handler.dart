@@ -42,6 +42,9 @@ class FirebaseMessagingHandler {
         debugPrint('FCM --> provisional');
         break;
     }
+    // Get the APNs token
+    String? apnsToken = await messaging.getAPNSToken();
+    log(name: "APNs token: ", "$apnsToken");
     // Get the FCM token
     await FirebaseMessaging.instance.getToken().then((token) async {
       log(name: "FCM: ", "$token");
