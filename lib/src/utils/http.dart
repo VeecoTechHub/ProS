@@ -5,6 +5,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' hide FormData;
@@ -82,9 +83,21 @@ class HttpUtil {
         // 如果你想终止请求并触发一个错误,你可以 reject 一个`DioError`对象,如`handler.reject(error)`，
         // 这样请求将被中止并触发异常，上层catchError会被调用。
       },
-      onError: (DioException e, handler) {
+      onError: (DioException e, handler) async {
         // Do something with response error
         Loading.dismiss();
+        await FirebaseCrashlytics.instance.recordError(
+          e.type,
+          e.stackTrace,
+          fatal: true,
+          reason: "${e.message}",
+        );
+
+        await FirebaseCrashlytics.instance.log("""
+            url:${e.response?.requestOptions.uri}\n,
+            parameters:${e.response?.requestOptions.queryParameters}\n,
+            data:${e.response?.requestOptions.data}\n,
+            response:${e.response?.data}\n,""");
         ErrorEntity eInfo = createErrorEntity(e);
         onError(eInfo);
         return handler.next(e); //continue
