@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pro_z/src/extension/extension_index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:video_player/video_player.dart';
 
 import '../global_enum/enum_index.dart';
@@ -38,13 +40,16 @@ class _ProZMultiMediaState extends State<ProZMultiMedia> {
     );
   }
 
+// Inside the _ProZMultiMediaState class
   Widget content() {
     if (widget.source.runtimeType.toString() == '_File') {
       final File data = widget.source;
       if (widget.source.toString().toLowerCase().contains("pdf")) {
-        return Image.network(
-          "https://agentnow.veecotech.com.my/storage/app/public/3379/conversions/PDF_file_icon.svg-4-thumb.jpg",
+        return CachedNetworkImage(
+          imageUrl: "https://agentnow.veecotech.com.my/storage/app/public/3379/conversions/PDF_file_icon.svg-4-thumb.jpg",
           fit: BoxFit.fill,
+          placeholder: (context, url) =>  Skeletonizer(child: SizedBox(width: widget.width,height: widget.height,)),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         );
       } else if (data.mediaType() == MediaType.video) {
         return VideoWidget(source: data);
@@ -58,16 +63,20 @@ class _ProZMultiMediaState extends State<ProZMultiMedia> {
     if (widget.source.runtimeType == String) {
       final String data = widget.source;
       if (data.toLowerCase().contains("pdf")) {
-        return Image.network(
-          "https://agentnow.veecotech.com.my/storage/app/public/3379/conversions/PDF_file_icon.svg-4-thumb.jpg",
+        return CachedNetworkImage(
+          imageUrl: "https://agentnow.veecotech.com.my/storage/app/public/3379/conversions/PDF_file_icon.svg-4-thumb.jpg",
           fit: BoxFit.fill,
+          placeholder: (context, url) =>  Skeletonizer(child: SizedBox(width: widget.width,height: widget.height,)),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         );
       }
       if (data.mediaType() == MediaType.image) {
         if (data.isURL) {
-          return Image.network(
-            data,
+          return CachedNetworkImage(
+            imageUrl: data,
             fit: widget.fit,
+            placeholder: (context, url) =>  Skeletonizer(child: SizedBox(width: widget.width,height: widget.height,)),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           );
         } else {
           return Image.asset(
