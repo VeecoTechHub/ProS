@@ -172,7 +172,6 @@ class FirebaseAuthHandler extends GetxController {
                   length: 6,
                   showCursor: true,
                   autofocus: true,
-                  androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsUserConsentApi,
                   defaultPinTheme: PinTheme(
                     width: 60,
                     height: 60,
