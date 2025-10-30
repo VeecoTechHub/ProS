@@ -10,9 +10,14 @@ class FirebaseAuthHandler extends GetxController {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   String verificationId = '';
 
-  Future<User?> loginWithEmailAndPassword({required String email, String password = "Password123!", bool autoCreate = false}) async {
+  Future<User?> loginWithEmailAndPassword(
+      {required String email,
+      String password = "Password123!",
+      bool autoCreate = false}) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password).then((value) {
+      await _firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) {
         print(_firebaseAuth.currentUser.toString());
       });
 
@@ -22,7 +27,8 @@ class FirebaseAuthHandler extends GetxController {
         case 'user-not-found':
           if (autoCreate) {
             Loading.show('Creating Account');
-            return await registerWithEmailAndPassword(email: email).then((value) {
+            return await registerWithEmailAndPassword(email: email)
+                .then((value) {
               Loading.dismiss();
               return value;
             });
@@ -41,9 +47,11 @@ class FirebaseAuthHandler extends GetxController {
     return null;
   }
 
-  Future<User?> registerWithEmailAndPassword({required String email, String password = "Password123!"}) async {
+  Future<User?> registerWithEmailAndPassword(
+      {required String email, String password = "Password123!"}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
       return _firebaseAuth.currentUser;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
@@ -62,13 +70,38 @@ class FirebaseAuthHandler extends GetxController {
 
   Future<bool> isEmailUsed(String? email) async {
     if (email == null) return false;
-    return (await _firebaseAuth.fetchSignInMethodsForEmail(email)).isNotEmpty;
+    try {
+      // Attempt to create an account with the email
+      // If it fails with 'email-already-in-use', the email is registered
+      await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password:
+            'TempCheckPassword123!@#${DateTime.now().millisecondsSinceEpoch}',
+      );
+      // If we reach here, email was not in use, so delete the temp account
+      await _firebaseAuth.currentUser?.delete();
+      return false;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        return true;
+      }
+      // For other errors (invalid email format, etc.), return false
+      return false;
+    }
   }
 
   Future<bool> updateEmail(String email) async {
     if (_firebaseAuth.currentUser != null) {
-      await _firebaseAuth.currentUser?.updateEmail(email);
-      return true;
+      try {
+        // Use verifyBeforeUpdateEmail which sends a verification email
+        // The email will be updated only after the user verifies it
+        await _firebaseAuth.currentUser?.verifyBeforeUpdateEmail(email);
+        Loading.show('Verification email sent. Please check your inbox.');
+        return true;
+      } catch (e) {
+        Loading.error('Failed to update email: ${e.toString()}');
+        return false;
+      }
     }
     return false;
   }
@@ -92,7 +125,8 @@ class FirebaseAuthHandler extends GetxController {
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         timeout: const Duration(seconds: 0),
-        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {},
+        verificationCompleted:
+            (PhoneAuthCredential phoneAuthCredential) async {},
         verificationFailed: onFailed,
         codeSent: (id, token) async {
           verificationId = id;
@@ -125,17 +159,23 @@ class FirebaseAuthHandler extends GetxController {
     Map<String, String>? syncData,
   }) async {
     try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otpCode);
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: otpCode);
       if (syncData != null) {
-        await loginWithEmailAndPassword(email: syncData['email']!, autoCreate: true).then((value) async {
+        await loginWithEmailAndPassword(
+                email: syncData['email']!, autoCreate: true)
+            .then((value) async {
           if (_firebaseAuth.currentUser != null) {
-            await _firebaseAuth.currentUser?.updateDisplayName(syncData['name']!);
+            await _firebaseAuth.currentUser
+                ?.updateDisplayName(syncData['name']!);
             await _firebaseAuth.currentUser?.linkWithCredential(credential);
             onSuccess();
           }
         });
       } else {
-        await _firebaseAuth.signInWithCredential(credential).then((value) => value.user != null ? onSuccess() : null);
+        await _firebaseAuth
+            .signInWithCredential(credential)
+            .then((value) => value.user != null ? onSuccess() : null);
       }
     } on FirebaseAuthException catch (e) {
       Loading.error(e.message);
