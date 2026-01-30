@@ -21,10 +21,18 @@ class ProZRow extends StatefulWidget {
   final dynamic trailingMediaSource;
   final BoxFit? leadingFit;
   final BoxFit? trailingFit;
-  final EdgeInsetsGeometry? leadingMediaPadding, trailingMediaPadding, leadingMediaMargin, trailingMediaMargin;
-  final double? leadingMediaHeight, trailingMediaHeight, leadingMediaWidth, trailingMediaWidth;
+  final EdgeInsetsGeometry? leadingMediaPadding,
+      trailingMediaPadding,
+      leadingMediaMargin,
+      trailingMediaMargin;
+  final double? leadingMediaHeight,
+      trailingMediaHeight,
+      leadingMediaWidth,
+      trailingMediaWidth;
   final IconData? leadingIcon;
+  final Color? leadingIconColor;
   final IconData? trailingIcon;
+  final Color? trailingIconColor;
   final bool defaultVisualDensity;
   final double? leadingWidth, trailingWidth;
   final EdgeInsets? contentPadding;
@@ -56,6 +64,8 @@ class ProZRow extends StatefulWidget {
       this.trailingMediaMargin,
       this.leadingMediaHeight,
       this.trailingMediaHeight,
+      this.leadingIconColor,
+      this.trailingIconColor,
       this.leadingMediaWidth,
       this.trailingMediaWidth,
       this.leadingIcon,
@@ -85,7 +95,7 @@ class ProZRowState extends State<ProZRow> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.leadingIcon != null) ...[
-                  Icon(widget.leadingIcon),
+                  Icon(widget.leadingIcon, color: widget.leadingIconColor),
                   const SizedBox(
                     width: 10,
                   ),
@@ -109,7 +119,8 @@ class ProZRowState extends State<ProZRow> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: widget.leadingTextColor ?? widget.allColor,
-                      fontWeight: widget.leadingFontWeight ?? widget.allFontWeight,
+                      fontWeight:
+                          widget.leadingFontWeight ?? widget.allFontWeight,
                       fontSize: widget.leadingFontSize ?? widget.allFontSize,
                     ),
                   ),
@@ -130,7 +141,7 @@ class ProZRowState extends State<ProZRow> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (widget.trailingIcon != null) ...[
-                Icon(widget.trailingIcon),
+                Icon(widget.trailingIcon, color: widget.trailingIconColor),
                 const SizedBox(
                   width: 10,
                 ),
@@ -154,7 +165,8 @@ class ProZRowState extends State<ProZRow> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: widget.trailingTextColor ?? widget.allColor,
-                    fontWeight: widget.trailingFontWeight ?? widget.allFontWeight,
+                    fontWeight:
+                        widget.trailingFontWeight ?? widget.allFontWeight,
                     fontSize: widget.trailingFontSize ?? widget.allFontSize,
                   ),
                   textAlign: TextAlign.end,
@@ -171,7 +183,10 @@ class ProZRowState extends State<ProZRow> {
       dense: widget.defaultVisualDensity ? false : true,
       minVerticalPadding: widget.minimalVerticalPadding ?? -4,
       contentPadding: widget.contentPadding ?? EdgeInsets.zero,
-      visualDensity: widget.visualDensity ?? (widget.defaultVisualDensity ? VisualDensity.adaptivePlatformDensity : const VisualDensity(horizontal: -4, vertical: -4)),
+      visualDensity: widget.visualDensity ??
+          (widget.defaultVisualDensity
+              ? VisualDensity.adaptivePlatformDensity
+              : const VisualDensity(horizontal: -4, vertical: -4)),
       leading: buildLeading(),
       trailing: buildTrailing(),
       key: widget.key,
