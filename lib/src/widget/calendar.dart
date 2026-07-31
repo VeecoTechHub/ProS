@@ -96,7 +96,7 @@ class _ProZCalendarState extends State<ProZCalendar> {
           ),
         ),
         Container(
-          decoration: BoxDecoration(color: Colors.grey.withOpacity(0.1), borderRadius: BorderRadius.all(Radius.circular(10.r))),
+          decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.1), borderRadius: BorderRadius.all(Radius.circular(10.r))),
           child: ProZExpandablePageView(
             pageController: pageController,
             initialPage: displayDate.month,

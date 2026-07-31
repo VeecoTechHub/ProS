@@ -51,7 +51,7 @@ class _ProZCounterState extends State<ProZCounter> {
                 flex: 1,
                 child: Container(
                   alignment: Alignment.center,
-                  color: widget.buttonColor.withOpacity(0.5),
+                  color: widget.buttonColor.withValues(alpha: 0.5),
                   child: IconButton(
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
@@ -83,7 +83,7 @@ class _ProZCounterState extends State<ProZCounter> {
               Flexible(
                 flex: 1,
                 child: Container(
-                  color: widget.buttonColor.withOpacity(0.5),
+                  color: widget.buttonColor.withValues(alpha: 0.5),
                   alignment: Alignment.center,
                   child: IconButton(
                     splashColor: Colors.transparent,
@@ -117,7 +117,7 @@ class _ProZCounterState extends State<ProZCounter> {
             flex: 1,
             child: Container(
               alignment: Alignment.center,
-              color: widget.borderColor.withOpacity(0.2),
+              color: widget.borderColor.withValues(alpha: 0.2),
               child: IconButton(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
@@ -149,7 +149,7 @@ class _ProZCounterState extends State<ProZCounter> {
           Flexible(
             flex: 1,
             child: Container(
-              color: widget.borderColor.withOpacity(0.2),
+              color: widget.borderColor.withValues(alpha: 0.2),
               alignment: Alignment.center,
               child: IconButton(
                 splashColor: Colors.transparent,

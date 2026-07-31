@@ -42,7 +42,7 @@ class _ProZDropDownButtonFieldState<T> extends State<ProZDropDownButtonField<T>>
         ),
         SizedBox(height: 10.h),
         DropdownButtonFormField<T>(
-          value: widget.value,
+          initialValue: widget.value,
           icon: const Icon(Icons.keyboard_arrow_down_outlined),
           items: widget.items,
           decoration: InputDecoration(

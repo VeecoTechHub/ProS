@@ -53,7 +53,7 @@ class FirebaseMessagingHandler {
 
     // Customize Notification
     await flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
         iOS: DarwinInitializationSettings(),
       ),
@@ -87,10 +87,10 @@ class FirebaseMessagingHandler {
       )
     ]);
     await flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      NotificationDetails(
+      id: 0,
+      title: title,
+      body: body,
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           'local_channel_id',
           'Local Notifications',
